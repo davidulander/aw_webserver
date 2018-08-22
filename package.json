@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Web server used to communicate with pi gateway and client app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/davidulander/aw_webserver.git"
+  },
+  "author": "David Ulander",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidulander/aw_webserver/issues"
+  },
+  "homepage": "https://github.com/davidulander/aw_webserver#readme"
+}
