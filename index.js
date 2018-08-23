@@ -6,7 +6,7 @@ let server = express();
 server.use("/sensors", routes);
 
 server.use("/", (req, res) => {
-  console.log("Hello from me");
+  console.log("Hello from test");
   res.json({ status: "success" });
 });
 server.listen(8000, () => {
