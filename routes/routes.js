@@ -1,7 +1,8 @@
 const express = require("express");
 const axios = require("axios");
-const routes = require("../config/config");
+const routes = require("../config/URLs");
 const router = express.Router();
+let db = require("../models/index.js");
 
 router.get("/humidity", (req, res, next) => {
   console.log("request recieved humidity");
@@ -15,5 +16,10 @@ router.get("/humidity", (req, res, next) => {
       console.log(err);
       res.sendStatus(500);
     });
+});
+
+router.get("/db", (req, res, next) => {
+  // db.
+  res.json({ status: "success" });
 });
 module.exports = router;
