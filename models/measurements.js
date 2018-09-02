@@ -1,6 +1,4 @@
 "use strict";
-let plants = require("./plants");
-let sensors = require("./sensors");
 module.exports = (sequelize, DataTypes) => {
   const measurements = sequelize.define(
     "measurements",
@@ -9,17 +7,17 @@ module.exports = (sequelize, DataTypes) => {
       plant_id: DataTypes.INTEGER
     },
     {
-      scope: {
-        lastMeasurement: {
-          order: ["created_at", "DESC"],
-          limit: 1
-        }
-      }
+      // scope: {
+      //   lastMeasurement: {
+      //     order: ["createdAt", "DESC"],
+      //     limit: 1
+      //   }
+      // }
     }
   );
   measurements.associate = models => {
-    measurements.belongsTo(models.plants);
-    measurements.belongsTo(models.sensors);
+    measurements.belongsTo(models.plants, { foreignKey: "plant_id" });
+    measurements.belongsTo(models.sensors, { foreignKey: "sensor_id" });
   };
   return measurements;
 };

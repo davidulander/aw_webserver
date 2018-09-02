@@ -1,8 +1,6 @@
 "use strict";
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    // let basilID =
     return queryInterface.bulkInsert(
       "measurements",
       [

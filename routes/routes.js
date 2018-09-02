@@ -19,7 +19,19 @@ router.get("/humidity", (req, res, next) => {
 });
 
 router.get("/db", (req, res, next) => {
-  // db.
-  res.json({ status: "success" });
+  Promise.all([
+    db.plants.findOne({ where: { name: "Basil" } }),
+    db.measurements.findAll({
+      include: [{ model: db.plants, where: { name: "Maskros" } }]
+    })
+  ])
+    .then(queryRes => {
+      res.json({
+        status: "success",
+        plant: JSON.stringify(queryRes[0]),
+        measurement: JSON.stringify(queryRes[1])
+      });
+    })
+    .catch(err => console.log(err));
 });
 module.exports = router;
