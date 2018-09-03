@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING
     },
-    { timestamps: true }
+    {}
   );
   plants.associate = function(models) {
     // associations can be defined here

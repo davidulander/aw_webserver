@@ -4,15 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     "measurements",
     {
       sensor_id: DataTypes.INTEGER,
-      plant_id: DataTypes.INTEGER
+      plant_id: DataTypes.INTEGER,
+      value: DataTypes.DOUBLE
     },
     {
-      // scope: {
-      //   lastMeasurement: {
-      //     order: ["createdAt", "DESC"],
-      //     limit: 1
-      //   }
-      // }
+      scopes: {
+        lastMeasurement: {
+          order: [["createdAt", "DESC"]]
+        }
+      }
     }
   );
   measurements.associate = models => {
