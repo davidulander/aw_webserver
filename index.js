@@ -1,9 +1,13 @@
 let express = require("express");
-const routes = require("./routes/routes");
+const sensors = require("./routes/sensors");
+const measurements = require("./routes/measurements");
+const plants = require("./routes/plants");
 
 let server = express();
 
-server.use("/sensors", routes);
+server.use("/sensors", sensors);
+server.use("/measurements", measurements);
+server.use("/plants", plants);
 
 server.use("/", (req, res) => {
   console.log("Hello from test");

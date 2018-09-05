@@ -15,6 +15,8 @@ router.get("/humidity", (req, res, next) => {
     });
 });
 
+// router.get("/all")
+
 router.get("/db", (req, res, next) => {
   Promise.all([
     db.plants.findOne({ where: { name: "Basil" } }),
