@@ -4,8 +4,8 @@ const { humidityMeasurement } = require("../utils/pi_gateway_calls");
 
 router.get("/humidity", (req, res, next) => {
   console.log("request recieved humidity");
-  let measuredValue = Math.random();
-  console.log(measuredValue);
+  // let measuredValue = Math.random();
+  // console.log(measuredValue);
   let sensorID = 1;
   let plantID = 1;
   humidityMeasurement(plantID, sensorID)

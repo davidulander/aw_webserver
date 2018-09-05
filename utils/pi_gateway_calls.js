@@ -11,7 +11,7 @@ const humidityMeasurement = (plantID, sensorID) => {
           routes.humidityMeansurePath
       )
       .then(sensorRes => {
-        console.log(sensorRes.data);
+        // console.log(sensorRes.data.toFixed(3));
         db.measurements
           .create({
             plant_id: plantID,
@@ -19,8 +19,8 @@ const humidityMeasurement = (plantID, sensorID) => {
             value: sensorRes.data.toFixed(3)
           })
           .then(measurement => {
-            let dryThreshold = 0.5;
-            // if (measurement < dryThreshold)
+            wateringJudge(measurement.value, plantID);
+            console.log("forsätter...");
             resolve(JSON.stringify(measurement));
           })
           .catch(err => console.log("couldn't save measurement to db", err));
@@ -32,6 +32,22 @@ const humidityMeasurement = (plantID, sensorID) => {
   });
 };
 
-const applyWater = plantID => {};
+const wateringJudge = (measurement, plantID) => {
+  // console.log("measurement: ", measurement);
+  let dryThreshold = 0.5;
+  if (measurement < dryThreshold) applyWater(plantID);
+  console.log("wateringJudge returning");
+  return;
+};
+
+const applyWater = plantID => {
+  axios
+    .get(
+      "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
+        routes.humidityMeansurePath
+    )
+    .then(res => console.log("res from applyWater"))
+    .catch(err => console.log("error from apply water", err));
+};
 
 module.exports = { humidityMeasurement: humidityMeasurement };
