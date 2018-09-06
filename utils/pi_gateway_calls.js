@@ -11,7 +11,6 @@ const humidityMeasurement = (plantID, sensorID) => {
           routes.humidityMeansurePath
       )
       .then(sensorRes => {
-        // console.log(sensorRes.data.toFixed(3));
         db.measurements
           .create({
             plant_id: plantID,
@@ -23,7 +22,10 @@ const humidityMeasurement = (plantID, sensorID) => {
             console.log("forsätter...");
             resolve(JSON.stringify(measurement));
           })
-          .catch(err => console.log("couldn't save measurement to db", err));
+          .catch(err => {
+            console.log("couldn't save measurement to db", err);
+            reject("couldn't save measurement to db");
+          });
       })
       .catch(err => {
         console.log("Error with pi humidity request", err);
@@ -33,7 +35,6 @@ const humidityMeasurement = (plantID, sensorID) => {
 };
 
 const wateringJudge = (measurement, plantID) => {
-  // console.log("measurement: ", measurement);
   let dryThreshold = 0.5;
   if (measurement < dryThreshold) applyWater(plantID);
   console.log("wateringJudge returning");
@@ -41,13 +42,32 @@ const wateringJudge = (measurement, plantID) => {
 };
 
 const applyWater = plantID => {
-  axios
-    .get(
-      "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
-        routes.humidityMeansurePath
-    )
-    .then(res => console.log("res from applyWater"))
-    .catch(err => console.log("error from apply water", err));
+  return new Promise((resolve, reject) => {
+    axios
+      .get(
+        "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
+          routes.humidityMeansurePath
+      )
+      .then(res => {
+        console.log("water was applied");
+        db.waterings
+          .create({ plant_id: plantID })
+          .then(values => {
+            resolve(JSON.stringify(values));
+          })
+          .catch(err => {
+            console.log(err);
+            reject({ err });
+          });
+      })
+      .catch(err => {
+        console.log("error from apply water", err);
+        reject(err);
+      });
+  });
 };
 
-module.exports = { humidityMeasurement: humidityMeasurement };
+module.exports = {
+  humidityMeasurement: humidityMeasurement,
+  applyWater: applyWater
+};

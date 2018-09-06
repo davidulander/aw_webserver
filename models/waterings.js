@@ -10,5 +10,6 @@ module.exports = (sequelize, DataTypes) => {
   waterings.associate = function(models) {
     waterings.belongsTo(models.plants, { foreignKey: "plant_id" });
   };
+
   return waterings;
 };

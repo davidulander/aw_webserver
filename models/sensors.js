@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   sensors.associate = function(models) {
-    // associations can be defined here
+    sensors.hasMany(models.measurements, { foreignKey: "sensor_id" });
   };
   return sensors;
 };

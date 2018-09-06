@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   plants.associate = function(models) {
-    // associations can be defined here
+    plants.hasMany(models.measurements, { foreignKey: "plant_id" });
+    plants.hasMany(models.waterings, { foreignKey: "plant_id" });
   };
 
   plants.all = () => {
