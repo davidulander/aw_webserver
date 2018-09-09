@@ -1,9 +1,9 @@
-const express = require("express");
+import * as express from "express";
+import * as db from "../models/index";
 const router = express.Router();
-import db from "../models/index";
 
 router.get("/", (req, res, next) => {
-  console.log(db);
+  console.log(db.plants);
   db.plants
     .all()
     .then(values => {
@@ -15,4 +15,4 @@ router.get("/", (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;
