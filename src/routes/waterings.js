@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
+import db from "../models/index";
+import { applyWater } from "../utils/pi_gateway_calls";
 const router = express.Router();
-const db = require("../models/index");
-const piGateway = require("../utils/pi_gateway_calls");
 
 router.post("/:plant_id", (req, res, next) => {
   let plant_id = req.params.plant_id;
@@ -9,8 +9,7 @@ router.post("/:plant_id", (req, res, next) => {
     .findOne({ where: { id: plant_id } })
     .then(plant => {
       if (plant !== null) {
-        piGateway
-          .applyWater(plant_id)
+        applyWater(plant_id)
           .then(values => {
             res.json(values);
           })
@@ -27,4 +26,4 @@ router.post("/:plant_id", (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

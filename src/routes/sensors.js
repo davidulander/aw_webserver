@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import db from "../models/index";
+import { humidityMeasurement } from "../utils/pi_gateway_calls";
 const router = express.Router();
-const { humidityMeasurement } = require("../utils/pi_gateway_calls");
 
 router.get("/humidity", (req, res, next) => {
   console.log("request recieved humidity");
@@ -35,4 +36,5 @@ router.get("/db", (req, res, next) => {
     })
     .catch(err => console.log(err));
 });
-module.exports = router;
+
+export default router;

@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
+import db from "../models/index";
 const router = express.Router();
-const db = require("../models/index");
 
 router.get("/:plantID", (req, res, next) => {
   db.measurements
@@ -26,4 +26,4 @@ router.get("/last/:plantID", (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
 let express = require("express");
-const sensors = require("./routes/sensors");
-const measurements = require("./routes/measurements");
-const plants = require("./routes/plants");
-const waterings = require("./routes/waterings");
+import sensors from "./routes/sensors";
+import measurements from "./routes/measurements";
+import plants from "./routes/plants";
+import waterings from "./routes/waterings";
 
 let server = express();
 

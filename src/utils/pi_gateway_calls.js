@@ -1,14 +1,14 @@
-const axios = require("axios");
-const routes = require("../config/URLs");
-let db = require("../models/");
+import db from "../models/index";
+import axios from "axios";
+import { gatewayBaseURL, humidityMeansurePath } from "../config/URLs";
 
-const humidityMeasurement = (plantID, sensorID) => {
+export const humidityMeasurement = (plantID, sensorID) => {
   return new Promise((resolve, reject) => {
     axios
       // .get(routes.gatewayBaseURL + routes.humidityMeansurePath)
       .get(
         "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
-          routes.humidityMeansurePath
+          humidityMeansurePath
       )
       .then(sensorRes => {
         db.measurements
@@ -41,7 +41,7 @@ const wateringJudge = (measurement, plantID) => {
   return;
 };
 
-const applyWater = plantID => {
+export const applyWater = plantID => {
   return new Promise((resolve, reject) => {
     axios
       .get(
@@ -65,9 +65,4 @@ const applyWater = plantID => {
         reject(err);
       });
   });
-};
-
-module.exports = {
-  humidityMeasurement: humidityMeasurement,
-  applyWater: applyWater
 };
