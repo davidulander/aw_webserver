@@ -1,6 +1,6 @@
 import { db } from "../models/index";
 import "es6-promise";
-let axios = require("axios");
+const axios = require("axios");
 import { gatewayBaseURL, humidityMeansurePath } from "../config/URLs";
 
 export const humidityMeasurement = (
