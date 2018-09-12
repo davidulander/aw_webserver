@@ -86,9 +86,9 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/config/URLs.js":
+/***/ "./src/config/URLs.ts":
 /*!****************************!*\
-  !*** ./src/config/URLs.js ***!
+  !*** ./src/config/URLs.ts ***!
   \****************************/
 /*! exports provided: gatewayBaseURL, humidityMeansurePath */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -97,8 +97,8 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gatewayBaseURL", function() { return gatewayBaseURL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "humidityMeansurePath", function() { return humidityMeansurePath; });
-const gatewayBaseURL = "http://192.168.0.10:8000";
-const humidityMeansurePath = "/sensors/humidity";
+var gatewayBaseURL = "http://192.168.0.10:8000";
+var humidityMeansurePath = "/sensors/humidity";
 
 
 /***/ }),
@@ -126,21 +126,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _routes_sensors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes/sensors */ "./src/routes/sensors.ts");
+/* harmony import */ var _routes_measurements__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes/measurements */ "./src/routes/measurements.ts");
+/* harmony import */ var _routes_plants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes/plants */ "./src/routes/plants.ts");
+/* harmony import */ var _routes_waterings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./routes/waterings */ "./src/routes/waterings.ts");
 
 
-// import measurements from "./routes/measurements";
-// import plants from "./routes/plants";
-// import waterings from "./routes/waterings";
-let server = express__WEBPACK_IMPORTED_MODULE_0__();
+
+
+
+var server = express__WEBPACK_IMPORTED_MODULE_0__();
 server.use("/sensors", _routes_sensors__WEBPACK_IMPORTED_MODULE_1__["default"]);
-// server.use("/measurements", measurements);
-// server.use("/plants", plants);
-// server.use("/waterings", waterings);
-server.use("/", (req, res) => {
-    console.log("Hello from test");
-    res.json({ status: "success" });
+server.use("/measurements", _routes_measurements__WEBPACK_IMPORTED_MODULE_2__["default"]);
+server.use("/plants", _routes_plants__WEBPACK_IMPORTED_MODULE_3__["default"]);
+server.use("/waterings", _routes_waterings__WEBPACK_IMPORTED_MODULE_4__["default"]);
+server.use("/", function (req, res) {
+    console.log("Hello from baseURL");
+    res.json({ status: "Hello from baseURL" });
 });
-server.listen(8000, () => {
+server.listen(8000, function () {
     console.log("server running on port 8000");
 });
 
@@ -363,6 +366,80 @@ module.exports = (sequelize, DataTypes) => {
 
 /***/ }),
 
+/***/ "./src/routes/measurements.ts":
+/*!************************************!*\
+  !*** ./src/routes/measurements.ts ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
+
+
+var router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
+router.get("/:plantID", function (req, res, next) {
+    _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements
+        .measurements(req.params.plantID)
+        .then(function (values) {
+        res.json(values);
+    })
+        .catch(function (err) {
+        console.log(err);
+        res.json({ err: err });
+    });
+});
+router.get("/last/:plantID", function (req, res, next) {
+    _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements
+        .measurements(req.params.plantID, true)
+        .then(function (values) {
+        res.json(values);
+    })
+        .catch(function (err) {
+        console.log(err);
+        res.json({ err: err });
+    });
+});
+/* harmony default export */ __webpack_exports__["default"] = (router);
+
+
+/***/ }),
+
+/***/ "./src/routes/plants.ts":
+/*!******************************!*\
+  !*** ./src/routes/plants.ts ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
+
+
+var router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
+router.get("/", function (req, res, next) {
+    console.log(_models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants);
+    _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants
+        .all()
+        .then(function (values) {
+        res.json(values);
+    })
+        .catch(function (err) {
+        console.log(err);
+        res.json({ err: err });
+    });
+});
+/* harmony default export */ __webpack_exports__["default"] = (router);
+
+
+/***/ }),
+
 /***/ "./src/routes/sensors.ts":
 /*!*******************************!*\
   !*** ./src/routes/sensors.ts ***!
@@ -375,22 +452,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
 /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
-/* harmony import */ var _utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/pi_gateway_calls */ "./src/utils/pi_gateway_calls.js");
+/* harmony import */ var _utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/pi_gateway_calls */ "./src/utils/pi_gateway_calls.ts");
 
 
 
-const router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
-router.get("/humidity", (req, res, next) => {
+var router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
+router.get("/humidity", function (req, res, next) {
     console.log("request recieved humidity");
-    let sensorID = 1;
-    let plantID = 1;
+    var sensorID = 1;
+    var plantID = 1;
     Object(_utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__["humidityMeasurement"])(plantID, sensorID)
-        .then(measurement => res.json(measurement))
-        .catch(err => {
+        .then(function (measurement) { return res.json(measurement); })
+        .catch(function (err) {
         res.status(500).send({ error: err });
     });
 });
-router.get("/db", (req, res, next) => {
+router.get("/db", function (req, res, next) {
     Promise.all([
         _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants.findOne({ where: { name: "Basil" } }),
         _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements.findAll({
@@ -398,7 +475,7 @@ router.get("/db", (req, res, next) => {
         }),
         _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements.scope("lastMeasurement").findAll()
     ])
-        .then(queryRes => {
+        .then(function (queryRes) {
         res.json({
             status: "success",
             plant: JSON.stringify(queryRes[0]),
@@ -406,16 +483,61 @@ router.get("/db", (req, res, next) => {
             scope: JSON.stringify(queryRes[2])
         });
     })
-        .catch(err => console.log(err));
+        .catch(function (err) { return console.log(err); });
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 
 /***/ }),
 
-/***/ "./src/utils/pi_gateway_calls.js":
+/***/ "./src/routes/waterings.ts":
+/*!*********************************!*\
+  !*** ./src/routes/waterings.ts ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
+/* harmony import */ var _utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/pi_gateway_calls */ "./src/utils/pi_gateway_calls.ts");
+
+
+
+var router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
+router.post("/:plant_id", function (req, res, next) {
+    var plant_id = req.params.plant_id;
+    _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants
+        .findOne({ where: { id: plant_id } })
+        .then(function (plant) {
+        if (plant !== null) {
+            Object(_utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__["applyWater"])(plant_id)
+                .then(function (values) {
+                res.json(values);
+            })
+                .catch(function (err) {
+                res.status(500).json({ err: err });
+            });
+        }
+        else {
+            res.status(404).json({ err: "could not find plant" });
+        }
+    })
+        .catch(function (err) {
+        console.log(err);
+        res.status(405).json({ err: "could not find plant" });
+    });
+});
+/* harmony default export */ __webpack_exports__["default"] = (router);
+
+
+/***/ }),
+
+/***/ "./src/utils/pi_gateway_calls.ts":
 /*!***************************************!*\
-  !*** ./src/utils/pi_gateway_calls.js ***!
+  !*** ./src/utils/pi_gateway_calls.ts ***!
   \***************************************/
 /*! exports provided: humidityMeasurement, applyWater */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -425,79 +547,74 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "humidityMeasurement", function() { return humidityMeasurement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "applyWater", function() { return applyWater; });
 /* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _config_URLs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/URLs */ "./src/config/URLs.js");
+/* harmony import */ var es6_promise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! es6-promise */ "es6-promise");
+/* harmony import */ var es6_promise__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(es6_promise__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _config_URLs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/URLs */ "./src/config/URLs.ts");
 
 
+var axios = __webpack_require__(/*! axios */ "axios");
 
-
-const humidityMeasurement = (plantID, sensorID) => {
-  return new Promise((resolve, reject) => {
-    axios__WEBPACK_IMPORTED_MODULE_1___default.a
-      // .get(routes.gatewayBaseURL + routes.humidityMeansurePath)
-      .get(
-        "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
-          _config_URLs__WEBPACK_IMPORTED_MODULE_2__["humidityMeansurePath"]
-      )
-      .then(sensorRes => {
-        _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].measurements
-          .create({
-            plant_id: plantID,
-            sensor_id: sensorID,
-            value: sensorRes.data.toFixed(3)
-          })
-          .then(measurement => {
-            wateringJudge(measurement.value, plantID);
-            console.log("forsätter...");
-            resolve(JSON.stringify(measurement));
-          })
-          .catch(err => {
-            console.log("couldn't save measurement to db", err);
-            reject("couldn't save measurement to db");
-          });
-      })
-      .catch(err => {
-        console.log("Error with pi humidity request", err);
-        reject("Error with pi humidity request");
-      });
-  });
+var humidityMeasurement = function (plantID, sensorID) {
+    return new Promise(function (resolve, reject) {
+        axios
+            // .get(routes.gatewayBaseURL + routes.humidityMeansurePath)
+            .get("https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
+            _config_URLs__WEBPACK_IMPORTED_MODULE_2__["humidityMeansurePath"])
+            .then(function (sensorRes) {
+            _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].measurements
+                .create({
+                plant_id: plantID,
+                sensor_id: sensorID,
+                value: sensorRes.data.toFixed(3)
+            })
+                .then(function (measurement) {
+                wateringJudge(measurement.value, plantID);
+                console.log("forsätter...");
+                resolve(JSON.stringify(measurement));
+            })
+                .catch(function (err) {
+                console.log("couldn't save measurement to db", err);
+                reject("couldn't save measurement to db");
+            });
+        })
+            .catch(function (err) {
+            console.log("Error with pi humidity request", err);
+            reject("Error with pi humidity request");
+        });
+    });
 };
-
-const wateringJudge = (measurement, plantID) => {
-  let dryThreshold = 0.5;
-  if (measurement < dryThreshold)
-    applyWater(plantID)
-      .then(() => console.log("watering created"))
-      .catch(err => console.log("error when creating waterings"));
-  console.log("wateringJudge returning");
-  return;
+var wateringJudge = function (measurement, plantID) {
+    var dryThreshold = 0.5;
+    if (measurement < dryThreshold)
+        applyWater(plantID)
+            .then(function () { return console.log("watering created"); })
+            .catch(function (err) { return console.log("error when creating waterings"); });
+    console.log("wateringJudge returning");
+    return;
 };
-
-const applyWater = plantID => {
-  return new Promise((resolve, reject) => {
-    axios__WEBPACK_IMPORTED_MODULE_1___default.a
-      .get(
-        "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
-          routes.humidityMeansurePath
-      )
-      .then(res => {
-        console.log("water was applied");
-        _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].waterings
-          .create({ plant_id: plantID })
-          .then(values => {
-            resolve(JSON.stringify(values));
-          })
-          .catch(err => {
-            console.log(err);
-            reject({ err });
-          });
-      })
-      .catch(err => {
-        console.log("error from apply water", err);
-        reject(err);
-      });
-  });
+var applyWater = function (plantID) {
+    return new Promise(function (resolve, reject) {
+        axios
+            .get("https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
+            _config_URLs__WEBPACK_IMPORTED_MODULE_2__["humidityMeansurePath"])
+            .then(function (res) {
+            console.log("water was applied");
+            _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].waterings
+                .create({ plant_id: plantID })
+                .then(function (values) {
+                resolve(JSON.stringify(values));
+            })
+                .catch(function (err) {
+                console.log("error when creating waterings");
+                console.log(err);
+                reject(err);
+            });
+        })
+            .catch(function (err) {
+            console.log("error from apply water");
+            reject("error from apply water");
+        });
+    });
 };
 
 
@@ -511,6 +628,17 @@ const applyWater = plantID => {
 /***/ (function(module, exports) {
 
 module.exports = require("axios");
+
+/***/ }),
+
+/***/ "es6-promise":
+/*!******************************!*\
+  !*** external "es6-promise" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("es6-promise");
 
 /***/ }),
 

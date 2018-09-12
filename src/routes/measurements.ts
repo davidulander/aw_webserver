@@ -1,14 +1,15 @@
-import express from "express";
-import db from "../models/index";
-const router = express.Router();
+import * as express from "express";
+import { Request, Response, NextFunction } from "express";
+import { db } from "../models/index";
+const router: express.Router = express.Router();
 
-router.get("/:plantID", (req, res, next) => {
+router.get("/:plantID", (req: Request, res: Response, next: NextFunction) => {
   db.measurements
     .measurements(req.params.plantID)
-    .then(values => {
+    .then((values: any) => {
       res.json(values);
     })
-    .catch(err => {
+    .catch((err: any) => {
       console.log(err);
       res.json({ err });
     });
@@ -17,10 +18,10 @@ router.get("/:plantID", (req, res, next) => {
 router.get("/last/:plantID", (req, res, next) => {
   db.measurements
     .measurements(req.params.plantID, true)
-    .then(values => {
+    .then((values: any) => {
       res.json(values);
     })
-    .catch(err => {
+    .catch((err: any) => {
       console.log(err);
       res.json({ err });
     });

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",
     "rebuild": "npm run build && node dist/bundle.js",
-    "dev": "nodemon --watch src --exec npm run rebuild"
+    "dev": "nodemon --watch src/ -e js,ts --exec npm run rebuild"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "@types/request": "^2.47.1",
     "@types/sequelize": "^4.27.25",
     "axios": "^0.18.0",
+    "es6-promise": "^4.2.5",
     "express": "^4.16.3",
     "nodemon": "^1.18.3",
     "pg": "^7.4.3",
