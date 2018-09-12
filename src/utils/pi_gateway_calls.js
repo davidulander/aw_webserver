@@ -1,4 +1,4 @@
-import db from "../models/index";
+import { db } from "../models/index";
 import axios from "axios";
 import { gatewayBaseURL, humidityMeansurePath } from "../config/URLs";
 
@@ -36,7 +36,10 @@ export const humidityMeasurement = (plantID, sensorID) => {
 
 const wateringJudge = (measurement, plantID) => {
   let dryThreshold = 0.5;
-  if (measurement < dryThreshold) applyWater(plantID);
+  if (measurement < dryThreshold)
+    applyWater(plantID)
+      .then(() => console.log("watering created"))
+      .catch(err => console.log("error when creating waterings"));
   console.log("wateringJudge returning");
   return;
 };

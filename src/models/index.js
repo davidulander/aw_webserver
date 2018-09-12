@@ -4,11 +4,11 @@ import Sequelize from "sequelize";
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
 
-let models = {};
+export let db = {};
 
 function getModels(config, force = false) {
-  if (Object.keys(models).length && !force) {
-    return models;
+  if (Object.keys(db).length && !force) {
+    return db;
   }
 
   const sequelize = new Sequelize(
@@ -25,24 +25,23 @@ function getModels(config, force = false) {
     require("./waterings.js")
   ];
 
-  // Initialize models
+  // Initialize db
   modules.forEach(module => {
     const model = module(sequelize, Sequelize, config);
-    models[model.name] = model;
+    db[model.name] = model;
   });
 
   // Apply associations
-  Object.keys(models).forEach(key => {
-    if ("associate" in models[key]) {
-      models[key].associate(models);
+  Object.keys(db).forEach(key => {
+    if ("associate" in db[key]) {
+      db[key].associate(db);
     }
   });
 
-  models.sequelize = sequelize;
-  models.Sequelize = Sequelize;
+  db.sequelize = sequelize;
+  db.Sequelize = Sequelize;
 
-  return models;
+  return db;
 }
 
 getModels(config, false);
-export default models;

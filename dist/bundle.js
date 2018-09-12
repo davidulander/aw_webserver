@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.ts");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -114,38 +114,34 @@ module.exports = {"development":{"username":"postgres","password":"postgres","da
 
 /***/ }),
 
-/***/ "./src/index.js":
+/***/ "./src/index.ts":
 /*!**********************!*\
-  !*** ./src/index.js ***!
+  !*** ./src/index.ts ***!
   \**********************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _routes_sensors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes/sensors */ "./src/routes/sensors.js");
-/* harmony import */ var _routes_measurements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes/measurements */ "./src/routes/measurements.js");
-/* harmony import */ var _routes_plants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes/plants */ "./src/routes/plants.js");
-/* harmony import */ var _routes_waterings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes/waterings */ "./src/routes/waterings.js");
-let express = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _routes_sensors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes/sensors */ "./src/routes/sensors.ts");
 
 
-
-
-
-let server = express();
-
-server.use("/sensors", _routes_sensors__WEBPACK_IMPORTED_MODULE_0__["default"]);
-server.use("/measurements", _routes_measurements__WEBPACK_IMPORTED_MODULE_1__["default"]);
-server.use("/plants", _routes_plants__WEBPACK_IMPORTED_MODULE_2__["default"]);
-server.use("/waterings", _routes_waterings__WEBPACK_IMPORTED_MODULE_3__["default"]);
-
+// import measurements from "./routes/measurements";
+// import plants from "./routes/plants";
+// import waterings from "./routes/waterings";
+let server = express__WEBPACK_IMPORTED_MODULE_0__();
+server.use("/sensors", _routes_sensors__WEBPACK_IMPORTED_MODULE_1__["default"]);
+// server.use("/measurements", measurements);
+// server.use("/plants", plants);
+// server.use("/waterings", waterings);
 server.use("/", (req, res) => {
-  console.log("Hello from test");
-  res.json({ status: "success" });
+    console.log("Hello from test");
+    res.json({ status: "success" });
 });
 server.listen(8000, () => {
-  console.log("server running on port 8000");
+    console.log("server running on port 8000");
 });
 
 
@@ -155,11 +151,12 @@ server.listen(8000, () => {
 /*!*****************************!*\
   !*** ./src/models/index.js ***!
   \*****************************/
-/*! exports provided: default */
+/*! exports provided: db */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "db", function() { return db; });
 /* harmony import */ var sequelize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sequelize */ "sequelize");
 /* harmony import */ var sequelize__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sequelize__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -168,11 +165,11 @@ __webpack_require__.r(__webpack_exports__);
 const env = "development" || "development";
 const config = __webpack_require__(/*! ./src/models/../config/config.json */ "./src/config/config.json")[env];
 
-let models = {};
+let db = {};
 
 function getModels(config, force = false) {
-  if (Object.keys(models).length && !force) {
-    return models;
+  if (Object.keys(db).length && !force) {
+    return db;
   }
 
   const sequelize = new sequelize__WEBPACK_IMPORTED_MODULE_0___default.a(
@@ -189,27 +186,26 @@ function getModels(config, force = false) {
     __webpack_require__(/*! ./waterings.js */ "./src/models/waterings.js")
   ];
 
-  // Initialize models
+  // Initialize db
   modules.forEach(module => {
     const model = module(sequelize, sequelize__WEBPACK_IMPORTED_MODULE_0___default.a, config);
-    models[model.name] = model;
+    db[model.name] = model;
   });
 
   // Apply associations
-  Object.keys(models).forEach(key => {
-    if ("associate" in models[key]) {
-      models[key].associate(models);
+  Object.keys(db).forEach(key => {
+    if ("associate" in db[key]) {
+      db[key].associate(db);
     }
   });
 
-  models.sequelize = sequelize;
-  models.Sequelize = sequelize__WEBPACK_IMPORTED_MODULE_0___default.a;
+  db.sequelize = sequelize;
+  db.Sequelize = sequelize__WEBPACK_IMPORTED_MODULE_0___default.a;
 
-  return models;
+  return db;
 }
 
 getModels(config, false);
-/* harmony default export */ __webpack_exports__["default"] = (models);
 
 
 /***/ }),
@@ -367,88 +363,9 @@ module.exports = (sequelize, DataTypes) => {
 
 /***/ }),
 
-/***/ "./src/routes/measurements.js":
-/*!************************************!*\
-  !*** ./src/routes/measurements.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
-
-
-const router = express__WEBPACK_IMPORTED_MODULE_0___default.a.Router();
-
-router.get("/:plantID", (req, res, next) => {
-  _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].measurements
-    .measurements(req.params.plantID)
-    .then(values => {
-      res.json(values);
-    })
-    .catch(err => {
-      console.log(err);
-      res.json({ err });
-    });
-});
-
-router.get("/last/:plantID", (req, res, next) => {
-  _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].measurements
-    .measurements(req.params.plantID, true)
-    .then(values => {
-      res.json(values);
-    })
-    .catch(err => {
-      console.log(err);
-      res.json({ err });
-    });
-});
-
-/* harmony default export */ __webpack_exports__["default"] = (router);
-
-
-/***/ }),
-
-/***/ "./src/routes/plants.js":
-/*!******************************!*\
-  !*** ./src/routes/plants.js ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
-
-
-const router = express__WEBPACK_IMPORTED_MODULE_0___default.a.Router();
-
-router.get("/", (req, res, next) => {
-  console.log(_models_index__WEBPACK_IMPORTED_MODULE_1__["default"].plants);
-  _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].plants
-    .all()
-    .then(values => {
-      res.json(values);
-    })
-    .catch(err => {
-      console.log(err);
-      res.json({ err });
-    });
-});
-
-/* harmony default export */ __webpack_exports__["default"] = (router);
-
-
-/***/ }),
-
-/***/ "./src/routes/sensors.js":
+/***/ "./src/routes/sensors.ts":
 /*!*******************************!*\
-  !*** ./src/routes/sensors.js ***!
+  !*** ./src/routes/sensors.ts ***!
   \*******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -462,88 +379,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const router = express__WEBPACK_IMPORTED_MODULE_0___default.a.Router();
-
+const router = express__WEBPACK_IMPORTED_MODULE_0__["Router"]();
 router.get("/humidity", (req, res, next) => {
-  console.log("request recieved humidity");
-  // let measuredValue = Math.random();
-  // console.log(measuredValue);
-  let sensorID = 1;
-  let plantID = 1;
-  Object(_utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__["humidityMeasurement"])(plantID, sensorID)
-    .then(measurement => res.json(measurement))
-    .catch(err => {
-      res.status(500).send({ error: err });
+    console.log("request recieved humidity");
+    let sensorID = 1;
+    let plantID = 1;
+    Object(_utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__["humidityMeasurement"])(plantID, sensorID)
+        .then(measurement => res.json(measurement))
+        .catch(err => {
+        res.status(500).send({ error: err });
     });
 });
-
-// router.get("/all")
-
 router.get("/db", (req, res, next) => {
-  Promise.all([
-    _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].plants.findOne({ where: { name: "Basil" } }),
-    _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].measurements.findAll({
-      include: [{ model: _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].plants, where: { name: "Maskros" } }]
-    }),
-    _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].measurements.scope("lastMeasurement").findAll()
-  ])
-    .then(queryRes => {
-      res.json({
-        status: "success",
-        plant: JSON.stringify(queryRes[0]),
-        measurement: JSON.stringify(queryRes[1]),
-        scope: JSON.stringify(queryRes[2])
-      });
+    Promise.all([
+        _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants.findOne({ where: { name: "Basil" } }),
+        _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements.findAll({
+            include: [{ model: _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].plants, where: { name: "Maskros" } }]
+        }),
+        _models_index__WEBPACK_IMPORTED_MODULE_1__["db"].measurements.scope("lastMeasurement").findAll()
+    ])
+        .then(queryRes => {
+        res.json({
+            status: "success",
+            plant: JSON.stringify(queryRes[0]),
+            measurement: JSON.stringify(queryRes[1]),
+            scope: JSON.stringify(queryRes[2])
+        });
     })
-    .catch(err => console.log(err));
+        .catch(err => console.log(err));
 });
-
-/* harmony default export */ __webpack_exports__["default"] = (router);
-
-
-/***/ }),
-
-/***/ "./src/routes/waterings.js":
-/*!*********************************!*\
-  !*** ./src/routes/waterings.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _models_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/index */ "./src/models/index.js");
-/* harmony import */ var _utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/pi_gateway_calls */ "./src/utils/pi_gateway_calls.js");
-
-
-
-const router = express__WEBPACK_IMPORTED_MODULE_0___default.a.Router();
-
-router.post("/:plant_id", (req, res, next) => {
-  let plant_id = req.params.plant_id;
-  _models_index__WEBPACK_IMPORTED_MODULE_1__["default"].plants
-    .findOne({ where: { id: plant_id } })
-    .then(plant => {
-      if (plant !== null) {
-        Object(_utils_pi_gateway_calls__WEBPACK_IMPORTED_MODULE_2__["applyWater"])(plant_id)
-          .then(values => {
-            res.json(values);
-          })
-          .catch(err => {
-            res.status(500).json({ err: err });
-          });
-      } else {
-        res.status(404).json({ err: "could not find plant" });
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(405).json({ err: "could not find plant" });
-    });
-});
-
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 
@@ -577,7 +441,7 @@ const humidityMeasurement = (plantID, sensorID) => {
           _config_URLs__WEBPACK_IMPORTED_MODULE_2__["humidityMeansurePath"]
       )
       .then(sensorRes => {
-        _models_index__WEBPACK_IMPORTED_MODULE_0__["default"].measurements
+        _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].measurements
           .create({
             plant_id: plantID,
             sensor_id: sensorID,
@@ -602,7 +466,10 @@ const humidityMeasurement = (plantID, sensorID) => {
 
 const wateringJudge = (measurement, plantID) => {
   let dryThreshold = 0.5;
-  if (measurement < dryThreshold) applyWater(plantID);
+  if (measurement < dryThreshold)
+    applyWater(plantID)
+      .then(() => console.log("watering created"))
+      .catch(err => console.log("error when creating waterings"));
   console.log("wateringJudge returning");
   return;
 };
@@ -616,7 +483,7 @@ const applyWater = plantID => {
       )
       .then(res => {
         console.log("water was applied");
-        _models_index__WEBPACK_IMPORTED_MODULE_0__["default"].waterings
+        _models_index__WEBPACK_IMPORTED_MODULE_0__["db"].waterings
           .create({ plant_id: plantID })
           .then(values => {
             resolve(JSON.stringify(values));
