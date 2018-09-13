@@ -19,3 +19,5 @@ server.use("/", (req: Request, res: Response) => {
 server.listen(8000, () => {
   console.log("server running on port 8000");
 });
+
+export default server;
