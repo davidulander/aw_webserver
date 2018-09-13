@@ -9,7 +9,7 @@ export const humidityMeasurement = (
 ): Promise<any> => {
   return new Promise((resolve, reject) => {
     axios
-      // .get(routes.gatewayBaseURL + routes.humidityMeansurePath)
+      // .get(gatewayBaseURL + humidityMeansurePath)
       .get(
         "https://1b6a59c8-b449-4360-a30c-d0d6220dfb77.mock.pstmn.io" +
           humidityMeansurePath
