@@ -9,7 +9,6 @@ import * as https from "https";
 import * as fs from "fs";
 import * as helmet from "helmet";
 
-console.log(path.join(path.resolve(), "..", "cert", "privatekey.key"));
 const options = {
   key: fs.readFileSync(
     path.join(path.resolve(), "..", "cert", "privatekey.key")

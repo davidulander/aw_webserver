@@ -8,8 +8,9 @@
     "test2": "mocha-webpack --webpack-config ./webpack.config.test.js --glob \"*.spec.js\" spec",
     "build": "webpack --config webpack.config.js",
     "rebuild": "npm run build && node dist/bundle.js",
-    "dev": "nodemon --watch src/ -e js,ts --exec npm run rebuild",
-    "prod": "node dist/bundle.js"
+    "watch": "nodemon --watch src/ -e js,ts --exec npm run rebuild",
+    "start": "node dist/bundle.js",
+    "prod:build": "set NODE_ENV=production && npm run build"
   },
   "repository": {
     "type": "git",
