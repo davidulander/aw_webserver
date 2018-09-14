@@ -1,10 +1,17 @@
 const path = require("path");
 var nodeExternals = require("webpack-node-externals");
 
+let mode;
+if (process.env.NODE_ENV && process.env.NODE_ENV.charAt(0) == "p") {
+  mode = "production";
+} else {
+  mode = "development";
+}
+console.log("building for: ", mode);
 module.exports = {
   entry: "./src/index.ts",
   target: "node",
-  mode: process.env.NODE_ENV.charAt(0) == "p" ? "production" : "development",
+  mode: mode,
   devtool: "source-map",
   externals: [nodeExternals()],
   module: {

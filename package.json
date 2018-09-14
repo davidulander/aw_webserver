@@ -8,9 +8,10 @@
     "test2": "mocha-webpack --webpack-config ./webpack.config.test.js --glob \"*.spec.js\" spec",
     "build": "webpack --config webpack.config.js",
     "rebuild": "npm run build && node dist/bundle.js",
-    "watch": "nodemon --watch src/ -e js,ts --exec npm run rebuild",
+    "dev": "nodemon --watch src/ -e js,ts --exec npm run rebuild",
     "start": "node dist/bundle.js",
-    "prod:build": "set NODE_ENV=production && npm run build"
+    "prod:build": "NODE_ENV=production npm run build",
+    "prod:migrate": "NODE_ENV=production sequelize db:migrate"
   },
   "repository": {
     "type": "git",
