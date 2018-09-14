@@ -7,7 +7,7 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgressss",
+    "username": "postgres",
     "password": "postgres",
     "database": "awsdb_test",
     "host": "127.0.0.1",
