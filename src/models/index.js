@@ -22,7 +22,8 @@ function getModels(config, force = false) {
     require("./measurements.js"),
     require("./plants.js"),
     require("./sensors.js"),
-    require("./waterings.js")
+    require("./waterings.js"),
+    require("./users.js")
   ];
 
   // Initialize db
