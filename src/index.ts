@@ -9,6 +9,8 @@ import login from "./routes/login";
 import * as https from "https";
 import * as fs from "fs";
 import * as helmet from "helmet";
+import * as jwtMiddleware from "express-jwt";
+import { jwtSecret } from "./config/jwt";
 
 const options = {
   key: fs.readFileSync(path.join(path.resolve(), "..", "cert", "cert.key")),
@@ -19,6 +21,24 @@ let server: express.Application = express();
 
 server.use(helmet());
 server.use(express.json());
+
+server.use(
+  "/",
+  jwtMiddleware({
+    secret: jwtSecret,
+    getToken: function(req) {
+      if (
+        req.headers.authorization &&
+        req.headers.authorization.split(" ")[0] === "Bearer"
+      ) {
+        return req.headers.authorization.split(" ")[1];
+      }
+      // No token the JWT middleware will return a 401 (unauthorized) to the client for this request
+      return null;
+    }
+  }).unless({ path: ["/login"] })
+);
+
 server.use("/sensors", sensors);
 server.use("/measurements", measurements);
 server.use("/plants", plants);

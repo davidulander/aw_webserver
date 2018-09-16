@@ -1,6 +1,8 @@
 import * as express from "express";
 import { Request, Response, NextFunction } from "express";
 import { db } from "../models/index";
+import * as jwt from "jwt-simple";
+import { jwtSecret } from "../config/jwt";
 import * as Sequelize from "sequelize";
 const Op = Sequelize.Op;
 
@@ -11,15 +13,24 @@ router.post("/", (req: Request, res: Response, next: NextFunction) => {
   db.users
     .findOne({ where: { username: { [Op.eq]: req.body.username } } })
     .then((user: any) => {
-      user
-        .validatePass(req.body.password, user.password)
-        .then((success: boolean) => {
-          if (success) {
-            res.json({ msg: `user ${user.username} logged in` });
-          } else {
-            res.status(404).send({ error: "wrong password" });
-          }
-        });
+      if (user) {
+        user
+          .validatePass(req.body.password, user.password)
+          .then((success: boolean) => {
+            if (success) {
+              const payload = { username: user.username };
+              const token = jwt.encode(payload, jwtSecret);
+              res.json({
+                msg: `user ${user.username} logged in`,
+                token: token
+              });
+            } else {
+              res.status(404).send({ error: "wrong password" });
+            }
+          });
+      } else {
+        res.status(401).send({ error: "cannot find user" });
+      }
     })
     .catch((err: any) => {
       console.log(err);
