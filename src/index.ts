@@ -26,7 +26,7 @@ server.use(
   "/",
   jwtMiddleware({
     secret: jwtSecret,
-    getToken: function(req) {
+    getToken: (req: any): any => {
       if (
         req.headers.authorization &&
         req.headers.authorization.split(" ")[0] === "Bearer"
