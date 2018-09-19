@@ -2,6 +2,7 @@ import * as express from "express";
 import { Request, Response, NextFunction } from "express";
 import { db } from "../models/index";
 import { humidityMeasurement } from "../utils/pi_gateway_calls";
+import { applyWater } from "../utils/pi_gateway_calls";
 
 const router: express.Router = express.Router();
 
@@ -16,23 +17,30 @@ router.get("/humidity", (req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-router.get("/db", (req: Request, res: Response, next: NextFunction) => {
-  Promise.all([
-    db.plants.findOne({ where: { name: "Basil" } }),
-    db.measurements.findAll({
-      include: [{ model: db.plants, where: { name: "Maskros" } }]
-    }),
-    db.measurements.scope("lastMeasurement").findAll()
-  ])
-    .then(queryRes => {
-      res.json({
-        status: "success",
-        plant: JSON.stringify(queryRes[0]),
-        measurement: JSON.stringify(queryRes[1]),
-        scope: JSON.stringify(queryRes[2])
+router.post(
+  "/applyWater",
+  (req: Request, res: Response, next: NextFunction) => {
+    let plant_id = req.body.plant_id;
+    db.plants
+      .findOne({ where: { id: plant_id } })
+      .then((plant: any) => {
+        if (plant !== null) {
+          applyWater(plant_id)
+            .then(values => {
+              res.json(values);
+            })
+            .catch(err => {
+              res.status(500).json({ err: err });
+            });
+        } else {
+          res.status(404).json({ err: "could not find plant" });
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+        res.status(405).json({ err: "could not find plant" });
       });
-    })
-    .catch(err => console.log(err));
-});
+  }
+);
 
 export default router;

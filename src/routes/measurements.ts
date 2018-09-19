@@ -3,42 +3,35 @@ import { Request, Response, NextFunction } from "express";
 import { db } from "../models/index";
 const router: express.Router = express.Router();
 
-router.get("/:date", (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.params.date);
-  db.measurements
-    .range7Days(req.params.date, db.plants)
+router.get("/:endDate", (req: Request, res: Response, next: NextFunction) => {
+  Promise.all([db.measurements.range7Days(req.params.endDate), db.plants.all()])
     .then((values: any) => {
-      console.log(values);
-      res.json(values);
+      res.json({ measurements: values[0], plants: values[1] });
     })
     .catch((err: any) => {
       console.log(err);
-      res.json({ err });
+      res.status(404).send({ error: err });
     });
 });
 
-router.get("/:plantID", (req: Request, res: Response, next: NextFunction) => {
-  db.measurements
-    .measurements(req.params.plantID)
-    .then((values: any) => {
-      res.json(values);
-    })
-    .catch((err: any) => {
-      console.log(err);
-      res.json({ err });
-    });
-});
-
-router.get("/last/:plantID", (req, res, next) => {
-  db.measurements
-    .measurements(req.params.plantID, true)
-    .then((values: any) => {
-      res.json(values);
-    })
-    .catch((err: any) => {
-      console.log(err);
-      res.json({ err });
-    });
-});
+router.get(
+  "/one/:plantID",
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log("routes");
+    console.log(req.params.plantID);
+    db.measurements
+      .forPlant(req.params.plantID)
+      .then((values: any) => {
+        console.log("then");
+        console.log(values);
+        res.json({ measurements: values });
+      })
+      .catch((err: any) => {
+        console.log("err");
+        console.log(err);
+        res.status(404).send({ error: err });
+      });
+  }
+);
 
 export default router;

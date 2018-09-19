@@ -26,14 +26,14 @@ module.exports = {
         {
           id: 4,
           plant_id: 2,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          createdAt: new Date("2016-01-01"),
+          updatedAt: new Date("2016-01-01")
         },
         {
           id: 5,
           plant_id: 3,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          createdAt: new Date("2025-01-01"),
+          updatedAt: new Date("2025-01-01")
         }
       ],
       {}

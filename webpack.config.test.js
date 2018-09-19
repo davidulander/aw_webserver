@@ -4,6 +4,7 @@ var WebpackShellPlugin = require("webpack-shell-plugin");
 var nodeExternals = require("webpack-node-externals");
 
 config.entry = "./spec/all-test.js";
+// config.mode = "none";
 config.output = {
   filename: "testBundle.js",
   path: path.resolve(__dirname, "dist")

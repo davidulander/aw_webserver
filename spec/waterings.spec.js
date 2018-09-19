@@ -1,5 +1,4 @@
 import chai from "chai";
-import app from "../src/index";
 import chaiAsPromised from "chai-as-promised";
 import { db } from "../src/models/index";
 import axios from "axios";
@@ -9,22 +8,20 @@ import { jwtSecret } from "../src/config/jwt";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 chai.should();
 chai.use(chaiAsPromised);
-var server;
 
-describe("plants controller", function() {
-  it("should find 3 plants", () => {
-    return db.plants.findAll().should.eventually.have.length(3);
+describe("waterings controller", function() {
+  it("should find waterings", () => {
+    return db.waterings.findAll().should.be.fulfilled;
   });
-  it("Http get /plants/ should return 3 plants", () => {
+  it("Http get /waterings/:date all waterings within 7 days range", () => {
     const token = jwt.encode({}, jwtSecret);
     return axios
-      .get("https://localhost:8080/plants", {
+      .get(`https://localhost:8080/waterings/${new Date()}`, {
         headers: { Authorization: "Bearer " + token }
       })
       .then(res => {
-        let array = JSON.parse(res.data);
-        array[2].should.have.property("name");
-        return array.should.have.length(3);
+        JSON.parse(res.data).length.should.be.above(2);
+        return res.status.should.equal(200);
       });
   });
 });

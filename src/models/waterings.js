@@ -11,5 +11,23 @@ module.exports = (sequelize, DataTypes) => {
     waterings.belongsTo(models.plants, { foreignKey: "plant_id" });
   };
 
+  waterings.range7Days = endDateStr => {
+    let endDate = new Date(endDateStr);
+    let startDate = new Date();
+    startDate.setDate(endDate.getDate() - 7);
+    return new Promise((resolve, reject) => {
+      waterings
+        .findAll({
+          where: {
+            createdAt: {
+              $lte: endDate,
+              $gt: startDate
+            }
+          }
+        })
+        .then(res => resolve(JSON.stringify(res)))
+        .catch(err => reject(err));
+    });
+  };
   return waterings;
 };

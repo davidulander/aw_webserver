@@ -21,12 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     measurements.belongsTo(models.sensors, { foreignKey: "sensor_id" });
   };
 
-  measurements.range7Days = (endDateStr, plants_model) => {
+  measurements.range7Days = endDateStr => {
     let endDate = new Date(endDateStr);
-    console.log(endDate);
     let startDate = new Date();
     startDate.setDate(endDate.getDate() - 7);
-    console.log(startDate);
     return new Promise((resolve, reject) => {
       measurements
         .findAll({
@@ -42,24 +40,15 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  measurements.measurements = (plantID, onlyLast) => {
+  measurements.forPlant = plantID => {
     return new Promise((resolve, reject) => {
-      let query;
-      if (onlyLast) {
-        query = measurements.findAll({
+      measurements
+        .findAll({
           where: {
-            plant_id: { [Op.eq]: plantID }
+            plant_id: { [Op.eq]: Number(plantID) }
           },
-          limit: 1
-        });
-      } else {
-        query = measurements.findAll({
-          where: {
-            plant_id: { [Op.eq]: plantID }
-          }
-        });
-      }
-      query
+          limit: 100
+        })
         .then(values => {
           resolve(JSON.stringify(values));
         })
