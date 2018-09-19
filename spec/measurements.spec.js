@@ -13,15 +13,26 @@ describe("measurements", function() {
   it("should find measurements", () => {
     return db.measurements.findAll().should.be.fulfilled;
   });
-  it("Http get /measurements/:plantID should return measurements", () => {
+  it("Http get /measurements/:date all measurements within 7 days range", () => {
     const token = jwt.encode({}, jwtSecret);
     return axios
-      .get("https://localhost:8080/measurements/1", {
+      .get(`https://localhost:8080/measurements/${new Date()}`, {
         headers: { Authorization: "Bearer " + token }
       })
       .then(res => {
-        JSON.parse(res.data).length.should.be.above(2);
-        return JSON.parse(res.data)[0].should.property("id");
+        // JSON.parse(res.data).length.should.be.above(2);
+        return res.status.should.equal(200);
       });
   });
+  // it("Http get /measurements/:plantID should return measurements", () => {
+  //   const token = jwt.encode({}, jwtSecret);
+  //   return axios
+  //     .get("https://localhost:8080/measurements/1", {
+  //       headers: { Authorization: "Bearer " + token }
+  //     })
+  //     .then(res => {
+  //       JSON.parse(res.data).length.should.be.above(2);
+  //       return JSON.parse(res.data)[0].should.property("id");
+  //     });
+  // });
 });

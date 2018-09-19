@@ -3,6 +3,20 @@ import { Request, Response, NextFunction } from "express";
 import { db } from "../models/index";
 const router: express.Router = express.Router();
 
+router.get("/:date", (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.params.date);
+  db.measurements
+    .range7Days(req.params.date, db.plants)
+    .then((values: any) => {
+      console.log(values);
+      res.json(values);
+    })
+    .catch((err: any) => {
+      console.log(err);
+      res.json({ err });
+    });
+});
+
 router.get("/:plantID", (req: Request, res: Response, next: NextFunction) => {
   db.measurements
     .measurements(req.params.plantID)
