@@ -11,7 +11,7 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.json(values);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       res.json({ err });
     });
 });

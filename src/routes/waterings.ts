@@ -11,7 +11,7 @@ router.get("/:endDate", (req: Request, res: Response, next: NextFunction) => {
       res.json(waterings);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       res.status(404).json({ err: "could not return waterings" });
     });
 });

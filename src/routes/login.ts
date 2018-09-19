@@ -33,7 +33,7 @@ router.post("/", (req: Request, res: Response, next: NextFunction) => {
       }
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       res.status(401).send({ error: "cannot find user" });
     });
 });

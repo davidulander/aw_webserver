@@ -37,7 +37,7 @@ router.post(
         }
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
         res.status(405).json({ err: "could not find plant" });
       });
   }

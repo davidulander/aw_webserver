@@ -27,12 +27,12 @@ export const humidityMeasurement = (
             resolve(JSON.stringify(measurement));
           })
           .catch((err: any) => {
-            console.log("couldn't save measurement to db", err);
+            console.error("couldn't save measurement to db", err);
             reject("couldn't save measurement to db");
           });
       })
       .catch((err: any) => {
-        console.log("Error with pi humidity request", err);
+        console.error("Error with pi humidity request", err);
         reject("Error with pi humidity request");
       });
   });
@@ -43,7 +43,7 @@ const wateringJudge = (measurement: number, plantID: number): void => {
   if (measurement < dryThreshold)
     applyWater(plantID)
       .then(() => console.log("watering created"))
-      .catch(err => console.log("error when creating waterings"));
+      .catch(err => console.error("error when creating waterings"));
   console.log("wateringJudge returning");
   return;
 };
@@ -63,13 +63,13 @@ export const applyWater = (plantID: number): Promise<any> => {
             resolve(JSON.stringify(values));
           })
           .catch((err: any) => {
-            console.log("error when creating waterings");
-            console.log(err);
+            console.error("error when creating waterings");
+            console.error(err);
             reject(err);
           });
       })
       .catch((err: any) => {
-        console.log("error from apply water");
+        console.error("error from apply water");
         reject("error from apply water");
       });
   });

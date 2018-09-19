@@ -22,13 +22,11 @@ router.get(
     db.measurements
       .forPlant(req.params.plantID)
       .then((values: any) => {
-        console.log("then");
-        console.log(values);
         res.json({ measurements: values });
       })
       .catch((err: any) => {
-        console.log("err");
-        console.log(err);
+        console.error("err");
+        console.error(err);
         res.status(404).send({ error: err });
       });
   }

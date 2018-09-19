@@ -33,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
               $lte: endDate,
               $gt: startDate
             }
-          }
+          },
+          order: [["plant_id", "ASC"], ["createdAt", "DESC"]]
         })
         .then(res => resolve(JSON.stringify(res)))
         .catch(err => reject(err));

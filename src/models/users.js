@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         user.password = success;
       })
       .catch(err => {
-        if (err) console.log(err);
+        if (err) console.error(err);
       });
   });
 
